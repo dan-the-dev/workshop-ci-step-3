@@ -1,6 +1,6 @@
 "use client";
 
-import { ITask } from "@/types/tasks";
+import { ITask, TaskPriority } from "@/types/tasks";
 import { FormEventHandler, useState } from "react";
 import { FiCheckCircle, FiCircle, FiEdit, FiTrash2 } from "react-icons/fi";
 import Modal from "./Modal";
@@ -10,9 +10,10 @@ import UpsertTaskModal from "./UpsertTaskModal";
 
 interface TaskProps {
   task: ITask;
+  showPriority: boolean;
 }
 
-const Task: React.FC<TaskProps> = ({ task }) => {
+const Task: React.FC<TaskProps> = ({ task, showPriority }) => {
   const router = useRouter();
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
   const [openModalDeleted, setOpenModalDeleted] = useState<boolean>(false);
@@ -48,9 +49,23 @@ const Task: React.FC<TaskProps> = ({ task }) => {
     router.refresh();
   };
 
+  const renderPriority = (priority?: TaskPriority) => {
+    if (priority === TaskPriority.HIGH) {
+      return <div className="badge badge-error">High</div>;
+    }
+    if (priority === TaskPriority.MEDIUM) {
+      return <div className="badge badge-primary">Medium</div>;
+    }
+    if (priority === TaskPriority.LOW) {
+      return <div className="badge badge-info">Low</div>;
+    }
+    return;
+  };
+
   return (
     <tr key={task.id}>
       <td className={task.done ? 'line-through text-green-200 font-bold w-full' : 'w-full'} data-testid="todo-name-label">{task.text}</td>
+      {showPriority && <td className={task.done ? 'line-through text-green-200 font-bold w-full' : 'w-full'} data-testid="todo-name-label">{renderPriority(task.priority)}</td>}
       {!task.done && <td className='flex gap-5'>
         <FiCircle
           onClick={() => setOpenModalComplete(true)}
