@@ -6,17 +6,24 @@ import { addTodo } from "@/api";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import UpsertTaskModal from "./UpsertTaskModal";
+import { TaskPriority } from "@/types/tasks";
 
-const AddTask = () => {
+interface AddTaskProps {
+  showPriority: boolean;
+}
+
+const AddTask: React.FC<AddTaskProps> = ({ showPriority }) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [newTaskValue, setNewTaskValue] = useState<string>("");
+  const [newPriorityValue, setNewPriorityValue] = useState<TaskPriority|null>(null);
 
   const handleSubmitNewTodo: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     await addTodo({
       id: uuidv4(),
       text: newTaskValue,
+      ...((showPriority && newPriorityValue !== null) ? { priority: newPriorityValue } : {}),
     });
     setNewTaskValue("");
     setModalOpen(false);
@@ -39,6 +46,8 @@ const AddTask = () => {
         handleSubmit={handleSubmitNewTodo}
         value={newTaskValue}
         setValue={setNewTaskValue}
+        showPriority={showPriority}
+        setPriority={setNewPriorityValue}
       />
     </div>
   );
