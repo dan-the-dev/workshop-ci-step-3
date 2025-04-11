@@ -1,4 +1,4 @@
-import { ITask } from "./types/tasks";
+import { ITask, TaskPriority } from "./types/tasks";
 
 const port = process.env.PORT || 3001;
 const baseUrl = `http://localhost:${port}`;
@@ -11,6 +11,7 @@ export const getAllTodos = async (): Promise<ITask[]> => {
 
 export const addTodo = async (todo: ITask): Promise<ITask> => {
   todo.done = todo.done ?? false;
+  todo.priority = todo.priority ?? TaskPriority.LOW;
 
   const res = await fetch(`${baseUrl}/tasks`, {
     method: 'POST',
