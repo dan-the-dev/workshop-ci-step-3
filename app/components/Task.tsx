@@ -20,12 +20,14 @@ const Task: React.FC<TaskProps> = ({ task, showPriority }) => {
   const [openModalComplete, setOpenModalComplete] = useState<boolean>(false);
   const [openModalUncomplete, setOpenModalUncomplete] = useState<boolean>(false);
   const [taskToEdit, setTaskToEdit] = useState<string>(task.text ?? '');
+  const [newPriorityValue, setNewPriorityValue] = useState<TaskPriority>(task.priority ?? TaskPriority.LOW);
 
   const handleSubmitEditTodo: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     await editTodo({
       id: task.id,
       text: taskToEdit,
+      priority: newPriorityValue,
     });
     setOpenModalEdit(false);
     router.refresh();
@@ -98,6 +100,9 @@ const Task: React.FC<TaskProps> = ({ task, showPriority }) => {
           value={taskToEdit}
           setValue={setTaskToEdit}
           variant='edit'
+          showPriority={showPriority}
+          priority={newPriorityValue}
+          setPriority={setNewPriorityValue}
         />
         <FiTrash2
           onClick={() => setOpenModalDeleted(true)}

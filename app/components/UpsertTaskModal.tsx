@@ -10,10 +10,11 @@ interface ModalProps {
   setValue: (value: string) => boolean | void;
   variant?: 'add' | 'edit';
   showPriority?: boolean;
+  priority?: TaskPriority;
   setPriority?: (value: TaskPriority) => boolean | void;
 }
 
-const UpsertTaskModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, value, setValue, handleSubmit, variant = 'add', showPriority = false, setPriority = () => {} }) => {
+const UpsertTaskModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, value, setValue, handleSubmit, variant = 'add', showPriority = false, priority = TaskPriority.LOW, setPriority = () => {} }) => {
   return (
     <Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
         <form onSubmit={handleSubmit}>
@@ -28,7 +29,7 @@ const UpsertTaskModal: React.FC<ModalProps> = ({ modalOpen, setModalOpen, value,
               data-testid={`todo-text-${variant}`}
             />
             {showPriority && (
-              <select className='select select-bordered' data-testid={`todo-priority-${variant}`} onChange={(e) => setPriority(e.target.value as TaskPriority)}>
+              <select className='select select-bordered' data-testid={`todo-priority-${variant}`} value={priority} onChange={(e) => setPriority(e.target.value as TaskPriority)}>
                 <option value={TaskPriority.LOW}>Low</option>
                 <option value={TaskPriority.MEDIUM}>Medium</option>
                 <option value={TaskPriority.HIGH}>High</option>

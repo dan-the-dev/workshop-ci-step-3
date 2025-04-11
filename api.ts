@@ -3,10 +3,18 @@ import { ITask, TaskPriority } from "./types/tasks";
 const port = process.env.PORT || 3001;
 const baseUrl = `http://localhost:${port}`;
 
+const sortByPriority = (a: ITask, b: ITask): number => {
+  if (a.priority === b.priority) return 0;
+  if (a.priority === TaskPriority.HIGH) return -1;
+  if (b.priority === TaskPriority.HIGH) return 1;
+  if (a.priority === TaskPriority.MEDIUM) return -1;
+  return 1; // a is LOW, b is MEDIUM or HIGH
+};
+
 export const getAllTodos = async (): Promise<ITask[]> => {
   const res = await fetch(`${baseUrl}/tasks`, { cache: 'no-store' });
   const todos = await res.json();
-  return todos;
+  return todos.sort(sortByPriority);
 }
 
 export const addTodo = async (todo: ITask): Promise<ITask> => {
@@ -24,7 +32,7 @@ export const addTodo = async (todo: ITask): Promise<ITask> => {
   return newTodo;
 }
 
-export const editTodo = async (todo: Pick<ITask, 'id' | 'text'>): Promise<ITask> => {
+export const editTodo = async (todo: Pick<ITask, 'id' | 'text' | 'priority'>): Promise<ITask> => {
   const res = await fetch(`${baseUrl}/tasks/${todo.id}`, {
     method: 'PATCH',
     headers: {

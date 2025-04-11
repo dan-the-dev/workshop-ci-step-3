@@ -64,7 +64,8 @@ test('add a TODO', async () => {
 test('edit a TODO', async () => {
   await editTodo({
     id: "2",
-    text: "Test 2 edited"
+    text: "Test 2 edited",
+    priority: TaskPriority.HIGH
   });
   const actual = await getAllTodos();
 
@@ -79,7 +80,7 @@ test('edit a TODO', async () => {
       id: "2",
       text: "Test 2 edited",
       done: false,
-      priority: TaskPriority.LOW
+      priority: TaskPriority.HIGH
     },
     {
       id: "3",
